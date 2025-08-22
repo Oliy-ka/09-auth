@@ -7,8 +7,8 @@ export interface Note {
   updatedAt: string;
 }
 
-export type NoteId = string;
+// export type NoteId = string;
 
-export interface NoteTag {
-  tag: "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
-}
+// export interface NoteTag {
+//   tag: "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
+// }
