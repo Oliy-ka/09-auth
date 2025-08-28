@@ -7,12 +7,12 @@ import { fetchNoteById } from "@/lib/api";
 import NoteDetailsClient from "./NoteDetails.client";
 
 interface NotePageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default async function NoteDetails({params}: NotePageProps) {
   const queryClient = new QueryClient();
-  const { id } = await params;
+  const { id } =  params;
 
 
     await queryClient.prefetchQuery({
@@ -23,7 +23,7 @@ export default async function NoteDetails({params}: NotePageProps) {
     return (<div>
         <h1>Note Details</h1>
         <HydrationBoundary state={dehydrate(queryClient)}>
-        <NoteDetailsClient  />
+        <NoteDetailsClient id={id} />
         </HydrationBoundary>
     </div>);
 }
