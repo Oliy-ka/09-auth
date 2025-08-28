@@ -8,7 +8,8 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.NEXT_PUBL
 export interface FetchNotesParams {
   search: string;
   page: number;
-  perPage?: number
+  perPage?: number;
+  tag?: string
 }
 
 interface FetchNotesResponse {
@@ -16,12 +17,13 @@ interface FetchNotesResponse {
   totalPages: number;
 }
 
-export const fetchNotes = async ({ search, page, perPage = 12 }: FetchNotesParams): Promise<FetchNotesResponse> => {
+export const fetchNotes = async ({ search, page, perPage = 12, tag }: FetchNotesParams): Promise<FetchNotesResponse> => {
     const res = await axios.get<FetchNotesResponse>("/notes", {
       params: {
         search,
         page,
-        perPage
+        perPage,
+        tag
       },
     });
     return res.data;

@@ -16,14 +16,14 @@ export default async function NoteDetails({params}: NotePageProps) {
 
 
     await queryClient.prefetchQuery({
-      queryKey: ["note", id],
+      queryKey: ["notes", id],
       queryFn: () => fetchNoteById(id),
     });
 
     return (<div>
         <h1>Note Details</h1>
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <NoteDetailsClient />
+        <NoteDetailsClient  />
         </HydrationBoundary>
     </div>);
 }

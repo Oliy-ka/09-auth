@@ -9,12 +9,13 @@ import Pagination from "@/components/Pagination/Pagination";
 import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import SearchBox from "@/components/SearchBox/SearchBox";
-// import Loader from "../Loader/Loader";
-// import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { useDebouncedCallback } from "use-debounce";
 
+interface NoteProps{
+  tag: string | undefined
+}
 
-function Notes() {
+function Notes({tag}: NoteProps) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -25,12 +26,9 @@ function Notes() {
 
   const debouncedSetSearchQuery = useDebouncedCallback(setSearchQuery, 500);
 
-    const { data,
-        // isLoading,
-        // isError,
-        isSuccess, refetch } = useQuery({
-    queryKey: ["notes", searchQuery, currentPage],
-    queryFn: () => fetchNotes({ search: searchQuery, page: currentPage }),
+    const { data, isSuccess, refetch } = useQuery({
+    queryKey: ["notes", searchQuery, currentPage, tag],
+    queryFn: () => fetchNotes({ search: searchQuery, page: currentPage, tag }),
     placeholderData: keepPreviousData,
   });
 
@@ -72,8 +70,6 @@ function Notes() {
           )}
         </>
       )}
-      {/* {isLoading && <Loader />}
-      {isError && <ErrorMessage />} */}
       {isModalOpen && (
         <Modal onClose={closeModal}>
           <NoteForm onSuccess={handleCreateSuccess} onCancel={closeModal}/>
