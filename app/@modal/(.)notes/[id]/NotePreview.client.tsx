@@ -12,7 +12,7 @@ export default function NotePreviewClient() {
     const router = useRouter();
 
     const { data: note, isLoading, isError } = useQuery({
-        queryKey: ["notes", { id }],
+        queryKey: ["note", { id }],
         queryFn: () => fetchNoteById(id),
         refetchOnMount: false
     });
@@ -33,12 +33,11 @@ export default function NotePreviewClient() {
                 <div className={css.item}>
                     <div className={css.header}>
                         <h2>{note.title}</h2>
+                        <p className={css.tag}>{note.tag}</p>
                     </div>
                     <p className={css.content}>{note.content}</p>
-                    <p className={css.date}>{note.updatedAt
-                        ? `Updated at: ${new Date(note.updatedAt).toLocaleString()}`
-                        : `Created at: ${new Date(note.createdAt).toLocaleString()}`}
-                    </p>
+                    <p className={css.date}>{`Created: ${new Date(note.createdAt).toLocaleString()}`}</p>
+                    <button className={css.backBtn} onClick={handleClose}>Back</button>
                 </div>
             </div>
         </Modal>

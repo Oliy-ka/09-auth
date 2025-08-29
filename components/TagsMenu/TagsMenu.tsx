@@ -20,7 +20,7 @@ export default function TagsMenu({tags}: TagsMenuProps) {
             </button>
             {isOpen && <ul className={css.menuList}>
                 <li className={css.menuItem}>
-                    <Link href={`/notes/filter/all`} onClick={toggle} className={css.menuLink}>
+                    <Link href={`/notes/filter/All`} onClick={toggle} className={css.menuLink}>
                     All notes
                     </Link>
                 </li>

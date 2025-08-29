@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import css from "./NotesPage.module.css"
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
@@ -24,7 +24,10 @@ function Notes({tag}: NoteProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const debouncedSetSearchQuery = useDebouncedCallback(setSearchQuery, 500);
+  const debouncedSetSearchQuery = useDebouncedCallback((value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1); 
+  }, 500);
 
     const { data, isSuccess, refetch } = useQuery({
     queryKey: ["notes", searchQuery, currentPage, tag],
@@ -32,9 +35,9 @@ function Notes({tag}: NoteProps) {
     placeholderData: keepPreviousData,
   });
 
-  useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery]);
+  // useEffect(() => {
+  //       setCurrentPage(1);
+  //   }, [searchQuery]);
 
   const notes = data?.notes || [];
   const totalPages = data?.totalPages || 0;
