@@ -7,13 +7,37 @@ import Notes from "./Notes.client";
 import { fetchNotes } from "@/lib/api";
 
 type Props = {
-  params: Promise<{ slug: string[] }>;
+  params: { slug: string[] };
 };
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = params;
+  const tag = slug[0] === 'All' ? undefined : slug[0];
+  return {
+    title: `NoteHub - Filtered by ${tag}`,
+    description: `Browse your notes filtered by "${tag}" in NoteHub. Organize and manage your notes easily.`,
+    openGraph: {
+      title: `NoteHub - Filtered by ${tag}`,
+      description: `Browse your notes filtered by "${tag}" in NoteHub. Organize and manage your notes easily.`,
+      url: `https://notehub.com/notes/${tag ?? "All"}`,
+      siteName: 'NoteHub',
+      images: [
+        {
+          url: 'https://ac.goit.global/fullstack/react/og-meta.jpg',
+          width: 1200,
+          height: 630,
+          alt: tag || "NoteHub",
+        },
+      ],
+    },
+  }
+}
+
 
 export default async function NotePage({params}: Props) {
   const queryClient = new QueryClient();
 
-  const { slug } = await params;
+  const { slug } =  params;
   const tag = slug[0] === 'All' ? undefined : slug[0];
 
   await queryClient.prefetchQuery({
