@@ -31,17 +31,17 @@ export default function NoteForm() {
             >
                 <div className={css.formGroup}>
                     <label htmlFor="title">Title</label>
-                    <input id="title" type="text" name="title" className={css.input}  onChange={(e) => setDraft({ title: e.target.value })}/>
+                    <input value={draft.title} id="title" type="text" name="title" className={css.input}  onChange={(e) => setDraft({ title: e.target.value })}/>
                 </div>
 
                 <div className={css.formGroup}>
                     <label htmlFor="content">Content</label>
-                    <textarea id="content" name="content" rows={8} className={css.textarea} onChange={(e) => setDraft({ content: e.target.value })} />
+                    <textarea value={draft.content} id="content" name="content" rows={8} className={css.textarea} onChange={(e) => setDraft({ content: e.target.value })} />
                 </div>
 
                 <div className={css.formGroup}>
                     <label htmlFor="tag">Tag</label>
-                    <select id="tag" name="tag" className={css.select} onChange={(e) => setDraft({ tag: e.target.value as NoteTag })}>
+                    <select value={draft.tag} id="tag" name="tag" className={css.select} onChange={(e) => setDraft({ tag: e.target.value as NoteTag })}>
                     <option value="">Select a tag</option>
                     <option value="Todo">Todo</option>
                     <option value="Work">Work</option>

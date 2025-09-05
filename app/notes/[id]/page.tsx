@@ -5,12 +5,13 @@ import {
 } from "@tanstack/react-query";
 import { fetchNoteById } from "@/lib/api";
 import NoteDetailsClient from "./NoteDetails.client";
+import { Metadata } from "next";
 
 interface NotePageProps {
   params: { id: string };
 }
 
-export async function generateMetadata({ params }: NotePageProps) {
+export async function generateMetadata({ params }: NotePageProps) : Promise<Metadata>{
   const { id } = params;
   const note = await fetchNoteById(id)
   return {
