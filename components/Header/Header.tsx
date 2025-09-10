@@ -1,6 +1,7 @@
 import Link from "next/link";
 import css from "./Header.module.css"
 import TagsMenu from "../TagsMenu/TagsMenu";
+import AuthNavigation from "../AuthNavigation/AuthNavigation";
 
 const tags = ["Work", "Personal", "Meeting", "Shopping", "Todo"];
 
@@ -17,6 +18,9 @@ function Header() {
                     </li>
                     <li>
                         <TagsMenu tags={tags} />
+                    </li>
+                    <li>
+                        <AuthNavigation />
                     </li>
                 </ul>
             </nav>
