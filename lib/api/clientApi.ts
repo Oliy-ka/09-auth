@@ -1,51 +1,41 @@
-import axios from "axios";
-import type { Note } from "@/types/note"
+import { User } from "@/types/user";
+import { nextServer } from "./api";
 
-axios.defaults.baseURL = 'https://notehub-public.goit.study/api';
-axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`;
+export type RegisterRequest = {
+  email: string;
+  password: string;
+  userName: string;
+};
 
+export const register = async (data: RegisterRequest) => {
+  const res = await nextServer.post<User>("/auth/register", data);
+  return res.data;
+};
 
-export interface FetchNotesParams {
-  search: string;
-  page: number;
-  perPage?: number;
-  tag?: string
-}
+export type LoginRequest = {
+  email: string;
+  password: string;
+};
 
-interface FetchNotesResponse {
-  notes: Note[];
-  totalPages: number;
-}
+export const login = async (data: LoginRequest) => {
+  const res = await nextServer.post<User>("/auth/login", data);
+  return res.data;
+};
 
-export const fetchNotes = async ({ search, page, perPage = 12, tag }: FetchNotesParams): Promise<FetchNotesResponse> => {
-    const res = await axios.get<FetchNotesResponse>("/notes", {
-      params: {
-        search,
-        page,
-        perPage,
-        tag
-      },
-    });
-    return res.data;
-}
+export const logout = async (): Promise<void> => {
+  await nextServer.post("/auth/logout");
+};
 
-export const fetchNoteById = async (noteId: Note["id"]) => {
-  const res = await axios.get<Note>(`/notes/${noteId}`);
-  return res.data
-}
+// type CheckSessionRequest = {
+//   success: boolean;
+// };
 
-interface createNoteParams {
-  title: string;
-  content?: string;
-  tag: Note["tag"];
-}
+// export const checkSession = async () => {
+//   const res = await nextServer.get<CheckSessionRequest>("/auth/session");
+//   return res.data.success;
+// };
 
-export const createNote = async (noteData: createNoteParams) => {
-    const res = await axios.post<Note>("/notes", noteData);
-    return res.data;
-}
-
-export const deleteNote = async (noteId: Note["id"] ) => {
-    const res = await axios.delete<Note>(`/notes/${noteId}`);
-    return res.data;
-}
+// export const getMe = async () => {
+//   const { data } = await nextServer.get<User>("/auth/me");
+//   return data;
+// };

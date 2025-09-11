@@ -1,13 +1,38 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import css from "./SignUpPage.module.css"
+import { useState } from "react";
+import { register, RegisterRequest } from "@/lib/api/clientApi";
+import { ApiError } from "@/app/api/api";
+
  
 export default function SignUp() {
+    const router = useRouter();
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (formData: FormData) => {
+        try {
+            const formValues = Object.fromEntries(formData) as RegisterRequest;
+            const res = await register(formValues);
+            if (res) {
+                router.push('/profile');
+            } else {
+                setError('Invalid email or password');
+            }
+        } catch (error) {
+            setError(
+                (error as ApiError).response?.data?.error ??
+                (error as ApiError).message ??
+                "Oops... some error"
+            );
+        }
+    };
     return (
         <>
             <main className={css.mainContent}>
                 <h1 className={css.formTitle}>Sign up</h1>
-                <form className={css.form}>
+                <form className={css.form} action={handleSubmit}>
                     <div className={css.formGroup}>
                         <label htmlFor="email">Email</label>
                         <input id="email" type="email" name="email" className={css.input} required />
@@ -23,8 +48,7 @@ export default function SignUp() {
                             Register
                         </button>
                     </div>
-
-                    <p className={css.error}>Error</p>
+                        {error && <p className={css.error}>{error}</p>}
                 </form>
             </main>
         </>

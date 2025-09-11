@@ -1,4 +1,4 @@
-import css from "@/app/Home.module.css"
+import css from "@/app/page.module.css"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
