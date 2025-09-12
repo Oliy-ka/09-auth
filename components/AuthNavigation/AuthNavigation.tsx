@@ -1,20 +1,26 @@
+"use client"
+
 import Link from "next/link";
 import css from "./AuthNavigation.module.css"
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
 import { logout } from "@/lib/api/clientApi";
+import { useEffect } from "react";
 
 export default function AuthNavigation() {
-    const router = useRouter();
+  const router = useRouter();
+  const { isAuthenticated, user, clearIsAuthenticated, checkMe } = useAuthStore();
 
-    const { isAuthenticated, user } = useAuthStore();
-    const clearIsAuthenticated = useAuthStore((state) => state.clearIsAuthenticated);
+  useEffect(() => {
+    checkMe(); 
+  }, [checkMe]);
 
-    const handleLogout = async () => {
-        await logout();
-        clearIsAuthenticated();
-        router.push("/sign-in");
-    };
+  const handleLogout = async () => {
+    await logout();
+    clearIsAuthenticated();
+    router.push("/sign-in");
+  };
+
 
     return (
     <>
