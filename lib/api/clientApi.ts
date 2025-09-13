@@ -1,10 +1,56 @@
 import { User } from "@/types/user";
 import { nextServer } from "./api";
+import { Note } from "@/types/note";
+
+export interface FetchNotesParams {
+  search: string;
+  page: number;
+  perPage?: number;
+  tag?: string
+}
+
+interface FetchNotesResponse {
+  notes: Note[];
+  totalPages: number;
+}
+
+export const fetchNotes = async ({ search, page, perPage = 12, tag }: FetchNotesParams): Promise<FetchNotesResponse> => {
+    const res = await nextServer.get<FetchNotesResponse>("/notes", {
+      params: {
+        search,
+        page,
+        perPage,
+        tag
+      },
+    });
+    return res.data;
+}
+
+export const fetchNoteById = async (noteId: Note["id"]) => {
+  const res = await nextServer.get<Note>(`/notes/${noteId}`);
+  return res.data
+}
+
+interface createNoteParams {
+  title: string;
+  content?: string;
+  tag: Note["tag"];
+}
+
+export const createNote = async (noteData: createNoteParams) => {
+    const res = await nextServer.post<Note>("/notes", noteData);
+    return res.data;
+}
+
+export const deleteNote = async (noteId: Note["id"] ) => {
+    const res = await nextServer.delete<Note>(`/notes/${noteId}`);
+    return res.data;
+}
 
 export type RegisterRequest = {
   email: string;
   password: string;
-  userName: string;
+  username: string;
 };
 
 export const register = async (data: RegisterRequest) => {
@@ -36,7 +82,7 @@ export const checkSession = async () => {
 };
 
 export const getMe = async () => {
-  const { data } = await nextServer.get<User>("/auth/me");
+  const { data } = await nextServer.get<User>("/users/me");
   return data;
 };
 
@@ -45,6 +91,6 @@ export type UpdateUserRequest = {
 };
 
 export const updateUser = async (data: UpdateUserRequest) => {
-  const res = await nextServer.patch<User>("/user/profile", data);
+  const res = await nextServer.patch<User>("/users/me", data);
   return res.data;
 };

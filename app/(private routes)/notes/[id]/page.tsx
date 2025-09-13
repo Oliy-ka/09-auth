@@ -5,22 +5,23 @@ import {
 } from "@tanstack/react-query";
 import NoteDetailsClient from "./NoteDetails.client";
 import { Metadata } from "next";
-import { fetchNoteById } from "@/lib/api/api";
+import { getNoteById } from "@/lib/api/serverApi"; 
 
 interface NotePageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>; 
 }
 
-export async function generateMetadata({ params }: NotePageProps) : Promise<Metadata>{
-  const { id } = params;
-  const note = await fetchNoteById(id)
+export async function generateMetadata({ params }: NotePageProps): Promise<Metadata> {
+  const { id } = await params; 
+  const note = await getNoteById(id);
+  
   return {
     title: `${note.title} | NoteHub`,
-    description: note.content|| "View details of this note in NoteHub.",
+    description: note.content || "View details of this note in NoteHub.",
     openGraph: {
       title: `${note.title} | NoteHub`,
-      description: note.content|| "View details of this note in NoteHub.",
-      url: `https://notehub.com/notes/${params.id}`,
+      description: note.content || "View details of this note in NoteHub.",
+      url: `https://notehub.com/notes/${id}`,
       siteName: 'NoteHub',
       images: [
         {
@@ -34,21 +35,21 @@ export async function generateMetadata({ params }: NotePageProps) : Promise<Meta
   }
 }
 
-
-export default async function NoteDetails({params}: NotePageProps) {
+export default async function NoteDetails({ params }: NotePageProps) {
   const queryClient = new QueryClient();
-  const { id } =  params;
+  const { id } = await params; 
 
+  await queryClient.prefetchQuery({
+    queryKey: ["notes", id],
+    queryFn: () => getNoteById(id), 
+  });
 
-    await queryClient.prefetchQuery({
-      queryKey: ["notes", id],
-      queryFn: () => fetchNoteById(id),
-    });
-
-    return (<div>
-        <h1>Note Details</h1>
-        <HydrationBoundary state={dehydrate(queryClient)}>
+  return (
+    <div>
+      <h1>Note Details</h1>
+      <HydrationBoundary state={dehydrate(queryClient)}>
         <NoteDetailsClient id={id} />
-        </HydrationBoundary>
-    </div>);
+      </HydrationBoundary>
+    </div>
+  );
 }

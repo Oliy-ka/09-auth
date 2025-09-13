@@ -10,7 +10,7 @@ type AuthStore = {
   checkMe: () => Promise<void>;
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>()((set) => ({
   isAuthenticated: false,
   user: null,
   setUser: (user: User) => {
@@ -21,7 +21,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
   checkMe: async () => {
     try {
-      const user = await getMe(); 
+      const user = await getMe();
       set({ user, isAuthenticated: true });
     } catch {
       set({ user: null, isAuthenticated: false });

@@ -8,7 +8,8 @@ import Pagination from "@/components/Pagination/Pagination";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import { useDebouncedCallback } from "use-debounce";
 import Link from "next/link";
-import { fetchNotes } from "@/lib/api/api";
+import { fetchNotes } from "@/lib/api/clientApi";
+
 
 interface NoteProps{
   tag: string | undefined

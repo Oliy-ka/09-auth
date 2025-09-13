@@ -4,9 +4,9 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import Notes from "./Notes.client";
-
 import { Metadata } from "next";
-import { fetchNotes } from "@/lib/api/api";
+import { getNotes } from "@/lib/api/serverApi";
+
 
 type Props = {
   params: { slug: string[] };
@@ -43,8 +43,8 @@ export default async function NotePage({params}: Props) {
   const tag = slug[0] === 'All' ? undefined : slug[0];
 
   await queryClient.prefetchQuery({
-    queryKey: ["notes", { search: "", page: 1, tag}],
-    queryFn: () => fetchNotes({ search: "", page: 1, tag }),
+    queryKey: ["notes", { search: "", page: 1, tag }],
+    queryFn: () => getNotes({ search: "", page: 1, tag }),
   });
 
   return (

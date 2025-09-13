@@ -9,11 +9,19 @@ type Props = {
   children: React.ReactNode;
 };
 
+const privateRoutes = ["/profile", "/notes"];
+function isPrivateRoute(path: string) {
+  return privateRoutes.some((route) => path.startsWith(route));
+}
+
 const AuthProvider = ({ children }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const setUser = useAuthStore((state) => state.setUser);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const clearAuth = useAuthStore((state) => state.clearIsAuthenticated);
+  const clearIsAuthenticated = useAuthStore(
+    (state) => state.clearIsAuthenticated
+  );
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -22,28 +30,28 @@ const AuthProvider = ({ children }: Props) => {
       try {
         setIsLoading(true);
         const sessionValid = await checkSession();
-        
+
         if (sessionValid) {
           const user = await getMe();
           if (user) {
             setUser(user);
           } else {
-            clearAuth();
+            clearIsAuthenticated();
             if (isPrivateRoute(pathname)) {
-              router.push("/login");
+              router.push("/sign-in");
             }
           }
         } else {
-          clearAuth();
+          clearIsAuthenticated();
           if (isPrivateRoute(pathname)) {
-            router.push("/login");
+            router.push("/sign-in");
           }
         }
       } catch (error) {
         console.error("Session verification failed:", error);
-        clearAuth();
+        clearIsAuthenticated();
         if (isPrivateRoute(pathname)) {
-          router.push("/login");
+          router.push("/sign-in");
         }
       } finally {
         setIsLoading(false);
@@ -51,12 +59,7 @@ const AuthProvider = ({ children }: Props) => {
     };
 
     verifySession();
-  }, [setUser, clearAuth, pathname, router]);
-
-  const isPrivateRoute = (path: string) => {
-    const privateRoutes = ['/profile', 'notes'];
-    return privateRoutes.some(route => path.startsWith(route));
-  };
+  }, [setUser, clearIsAuthenticated, pathname, router]);
 
   if (isLoading) {
     return (
@@ -67,12 +70,10 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   if (isPrivateRoute(pathname) && !isAuthenticated) {
-    return null; 
+    return null;
   }
 
-    return <>
-        {children}
-    </>;
+  return <>{children}</>;
 };
 
 export default AuthProvider;
