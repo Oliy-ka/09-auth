@@ -49,7 +49,6 @@ export default async function NotePage({params}: Props) {
 
   return (
     <div>
-      <h1>Tasks page</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Notes tag={tag} />
       </HydrationBoundary>

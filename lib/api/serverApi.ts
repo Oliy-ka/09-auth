@@ -61,7 +61,7 @@ export const getNoteById = async (id: string): Promise<Note> => {
 export const getProfile = async (): Promise<User> => {
   const cookieStore = cookies();
 
-  const res = await nextServer.get<User>("/auth/me", {
+  const res = await nextServer.get<User>("/users/me", {
     headers: {
       Cookie: cookieStore.toString(),
     },
