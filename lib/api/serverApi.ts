@@ -12,7 +12,7 @@ export const checkServerSession = async () => {
     },
   });
 
-  return res.data;
+  return res;
 };
 
 export interface FetchNotesParams {
