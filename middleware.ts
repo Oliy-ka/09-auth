@@ -28,7 +28,20 @@ export async function middleware(request: NextRequest) {
       const res = await checkServerSession();
 
       if (res.status === 200) {
-        return NextResponse.next();
+        const response = NextResponse.next();
+
+        const setCookieHeader = res.headers["set-cookie"];
+        if (setCookieHeader) {
+          const cookiesArray = Array.isArray(setCookieHeader)
+            ? setCookieHeader
+            : [setCookieHeader];
+
+          for (const cookie of cookiesArray) {
+            response.headers.append("set-cookie", cookie);
+          }
+        }
+
+        return response;
       } else {
         return NextResponse.redirect(new URL("/sign-in", request.url));
       }
