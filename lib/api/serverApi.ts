@@ -4,7 +4,7 @@ import type { Note } from "@/types/note";
 import type { User } from "@/types/user";
 
 export const checkServerSession = async () => {
-  const cookieStore = cookies();
+  const cookieStore =  await cookies();
 
   const res = await nextServer.get<{ success: boolean }>("/auth/session", {
     headers: {
@@ -29,7 +29,7 @@ interface FetchNotesResponse {
 
 export const getNotes = async (params: FetchNotesParams = {}): Promise<FetchNotesResponse> => {
   const { search = "", page = 1, perPage = 12, tag } = params;
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const res = await nextServer.get<FetchNotesResponse>("/notes", {
     params: {
@@ -47,7 +47,7 @@ export const getNotes = async (params: FetchNotesParams = {}): Promise<FetchNote
 };
 
 export const getNoteById = async (id: string): Promise<Note> => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const res = await nextServer.get<Note>(`/notes/${id}`, {
     headers: {
@@ -59,7 +59,7 @@ export const getNoteById = async (id: string): Promise<Note> => {
 };
 
 export const getProfile = async (): Promise<User> => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const res = await nextServer.get<User>("/users/me", {
     headers: {

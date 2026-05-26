@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
     try {
       const res = await checkServerSession();
 
-      if (res.status === 200) {
+      if (res.data.success) {
         const response = NextResponse.next();
 
         const setCookieHeader = res.headers["set-cookie"];
